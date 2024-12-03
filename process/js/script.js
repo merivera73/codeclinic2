@@ -1,14 +1,14 @@
 $(function () {
-
-  'use strict';
+  "use strict";
 
   var fromDate, toDate;
-  var myDate = '2005-12-31';
+  var myDate = "2005-12-31";
 
   function getMean(myArray) {
-    var mean = myArray.reduce(function (a, b) {
-      return a + b;
-    }) / myArray.length;
+    var mean =
+      myArray.reduce(function (a, b) {
+        return a + b;
+      }) / myArray.length;
     return mean.toFixed(2);
   } //getMean
 
@@ -30,21 +30,24 @@ $(function () {
     return median.toFixed(2);
   } //getMedian
 
-
   function processData(data) {
     var myData = [];
 
-    var myDates = ['x'];
-    var meanTemps = ['Mean Temperature'];
-    var medTemps = ['Median Temperature'];
-    var meanPress = ['Mean Pressure'];
-    var medPress = ['Median Pressure'];
-    var meanSpeeds = ['Mean Speed'];
-    var medSpeeds = ['Median Speed'];
+    var myDates = ["x"];
+    var meanTemps = ["Mean Temperature"];
+    var medTemps = ["Median Temperature"];
+    var meanPress = ["Mean Pressure"];
+    var medPress = ["Median Pressure"];
+    var meanSpeeds = ["Mean Speed"];
+    var medSpeeds = ["Median Speed"];
 
     for (var key in data) {
       if (data.hasOwnProperty(key)) {
-        if (data[key].t !== null && data[key].p !== null && data[key].s !== null) {
+        if (
+          data[key].t !== null &&
+          data[key].p !== null &&
+          data[key].s !== null
+        ) {
           myDates.push(key);
           meanTemps.push(getMean(data[key].t));
           medTemps.push(getMedian(data[key].t));
@@ -62,45 +65,53 @@ $(function () {
 
   function generateChart(data) {
     var chart = c3.generate({
-
       data: {
-        x: 'x',
+        x: "x",
         columns: data,
-        type: 'bar',
-        groups: [['Mean Temperature', 'Median Temperature', 'Mean Pressure', 'Median Pressure', 'Mean Speed', 'Median Speed']]
+        type: "bar",
+        groups: [
+          [
+            "Mean Temperature",
+            "Median Temperature",
+            "Mean Pressure",
+            "Median Pressure",
+            "Mean Speed",
+            "Median Speed",
+          ],
+        ],
       },
       bar: {
         width: {
-          ratio: 0.9
-        }
+          ratio: 0.9,
+        },
       },
       axis: {
         x: {
-          type: 'timeseries',
+          type: "timeseries",
           tick: {
-            format: '%Y-%m-%d'
-          } // x
-        } }, // axis
+            format: "%Y-%m-%d",
+          }, // x
+        },
+      }, // axis
       subchart: {
-        show: true //subchart
-      } }); // chart
+        show: true, //subchart
+      },
+    }); // chart
   } // generateChart
-
 
   function loadChart() {
     $.ajax({
-      url: 'http://foundationphp.com/phpclinic/podata.php?&raw&callback=?',
-      jsonpCallback: 'jsonReturnData',
-      dataType: 'jsonp',
+      url: "http://foundationphp.com/phpclinic/podata.php?&raw&callback=?",
+      jsonpCallback: "jsonReturnData",
+      dataType: "jsonp",
       data: {
-        startDate: formatDate(fromDate, ''),
-        endDate: formatDate(toDate, ''),
-        format: 'json'
+        startDate: formatDate(fromDate, ""),
+        endDate: formatDate(toDate, ""),
+        format: "json",
       },
       success: function (response) {
         generateChart(processData(response));
-      } //success
-
+      }, //success
     }); //AJAX Call
   } //load Chart
 
@@ -111,13 +122,13 @@ $(function () {
     var year = someday.getUTCFullYear();
 
     if (month <= 9) {
-      month = '0' + month;
+      month = "0" + month;
     }
     if (day <= 9) {
-      day = '0' + day;
+      day = "0" + day;
     }
 
-    return '' + year + divider + month + divider + day;
+    return "" + year + divider + month + divider + day;
   }
 
   //set up
@@ -128,20 +139,24 @@ $(function () {
   toDate = new Date(myDate);
   toDate.setDate(toDate.getDate() - 1);
 
-  document.forms.rangeform.from.value = formatDate(fromDate, '-');
-  document.forms.rangeform.to.value = formatDate(toDate, '-');
+  document.forms.rangeform.from.value = formatDate(fromDate, "-");
+  document.forms.rangeform.to.value = formatDate(toDate, "-");
 
   loadChart();
 
   // Events -------
 
-  document.forms.rangeform.addEventListener('change', function (e) {
-    fromDate = new Date(document.rangeform.from.value);
-    toDate = new Date(document.rangeform.to.value);
+  document.forms.rangeform.addEventListener(
+    "change",
+    function (e) {
+      fromDate = new Date(document.rangeform.from.value);
+      toDate = new Date(document.rangeform.to.value);
 
-    fromDate = fromDate.toUTCString();
-    toDate = toDate.toUTCString();
+      fromDate = fromDate.toUTCString();
+      toDate = toDate.toUTCString();
 
-    loadChart();
-  }, false);
+      loadChart();
+    },
+    false
+  );
 }); // Page Loaded
